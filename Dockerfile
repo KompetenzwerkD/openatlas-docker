@@ -9,7 +9,6 @@ RUN apt update && apt install -y python3 python3-bcrypt python3-dateutil python3
     python3-flask-login python3-flaskext.wtf python3-markdown \
     python3-numpy python3-pandas python3-jinja2 python3-flask-cors \
     python3-flask-restful p7zip-full python3-wand \
-    apache2 libapache2-mod-wsgi-py3 \
     postgresql \
     postgresql-13-postgis-3 postgresql-13-postgis-3-scripts \
     gettext npm python3-pip \
@@ -26,13 +25,11 @@ RUN git clone https://github.com/craws/OpenAtlas.git && \
     echo "listen_addresses = '*'" >> /etc/postgresql/13/main/postgresql.conf 
     
 
-RUN pg_ctlcluster 13 main start
-
 WORKDIR /var/www/OpenAtlas/install/
 
 USER postgres
 
-RUN  /etc/init.d/postgresql restart && \
+RUN pg_ctlcluster 13 main start && \
     psql --command "CREATE USER openatlas WITH SUPERUSER PASSWORD 'CHANGE ME';" && \
     createdb openatlas -O openatlas && \
     psql openatlas -c "CREATE EXTENSION postgis; CREATE EXTENSION unaccent;" && \
