@@ -4,4 +4,3 @@ services:
     build: .
     ports: 
       - 8999:80
-      - 9000:5000
